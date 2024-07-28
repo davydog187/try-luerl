@@ -1,0 +1,7 @@
+<section class="grid grid-cols-2 gap-8 align-top">
+    <.simple_form for={@form} id="code-form" phx-change="validate" phx-submit="execute">
+        <.input type="textarea" field={@form[:code]} />
+        <.button>Run</.button>
+    </.simple_form>
+    <LuaComponents.console output={@output} />
+</section>
