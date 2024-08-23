@@ -13,21 +13,21 @@ defmodule TryLuerlWeb.TryLive do
   @impl Phoenix.LiveView
   def mount(_, _, socket) do
     changeset = changeset(%__MODULE__{}, %{code: default_code()})
-    {:ok, socket |> assign(:output, []) |> assign_form(changeset)}
+    {:ok, socket |> assign(output: [], code: default_code()) |> assign_form(changeset)}
   end
 
   @impl Phoenix.LiveView
-  def handle_event("validate", %{"try_live" => _params}, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_event("execute", %{"try_live" => %{"code" => code}}, socket) do
-    {output, _} = Lua.eval!(setup_lua(), code)
+  def handle_event("execute", _, socket) do
+    {output, _} = Lua.eval!(setup_lua(), socket.assigns.code)
 
     {:noreply, put_flash(socket, :info, "Executed Lua with output #{inspect(output)}")}
   rescue
     error ->
       {:noreply, put_flash(socket, :error, "Failed to execute Lua #{inspect(error)}")}
+  end
+
+  def handle_event("code_updated", %{"code" => code}, socket) do
+    {:noreply, assign(socket, :code, code)}
   end
 
   @impl Phoenix.LiveView
@@ -49,9 +49,25 @@ defmodule TryLuerlWeb.TryLive do
 
   defp default_code do
     ~LUA"""
-    print("hello Robert!")
+    -- Function to generate the Fibonacci sequence
+    function generate_fibonacci(n)
+        local sequence = {}
+        local a, b = 0, 1
 
-    return 22 * 11
+        for i = 1, n do
+            table.insert(sequence, a)
+            a, b = b, a + b
+        end
+
+        return sequence
+    end
+
+    -- Example usage
+    local fib_sequence = generate_fibonacci(10)
+
+    for _, value in ipairs(fib_sequence) do
+        print(value)
+    end
     """
   end
 

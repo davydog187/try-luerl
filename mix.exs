@@ -71,6 +71,7 @@ defmodule TryLuerl.MixProject do
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind try_luerl", "esbuild try_luerl"],
+      "assets.install": ["cmd npm install --prefix assets"],
       "assets.deploy": [
         "tailwind try_luerl --minify",
         "esbuild try_luerl --minify",

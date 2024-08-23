@@ -22,7 +22,15 @@ FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
 RUN apt-get update -y && apt-get install -y build-essential git \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# Verify Node.js and npm versions
+RUN node --version && npm --version
+
+
 
 # prepare build dir
 WORKDIR /app
@@ -52,6 +60,7 @@ COPY lib lib
 COPY assets assets
 
 # compile assets
+RUN mix assets.install
 RUN mix assets.deploy
 
 # Compile the release
