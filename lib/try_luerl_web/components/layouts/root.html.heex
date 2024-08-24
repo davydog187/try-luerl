@@ -11,7 +11,19 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="bg-white">
+  <body class="bg-gray-900 text-gray-100 ">
+    <header class="p-4">
+      <div class="flex  items-center">
+        <nav>
+          <img src={~p"/images/luerl.png"} class="w-28" />
+        </nav>
+        <h1 class="text-3xl font-bold text-white italic">Try Luerl</h1>
+      </div>
+    </header>
     <%= @inner_content %>
+
+    <footer class="bg-gray-800 p-4 mt-10 text-center text-gray-500">
+      <p>&copy; 2024 Luerl. All rights reserved.</p>
+    </footer>
   </body>
 </html>

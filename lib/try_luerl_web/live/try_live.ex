@@ -1,19 +1,18 @@
 defmodule TryLuerlWeb.TryLive do
   use TryLuerlWeb, :live_view
-  use Ecto.Schema
+
+  alias TryLuerl.Examples
 
   alias TryLuerlWeb.Components.Lua, as: LuaComponents
 
-  import Lua
-
-  embedded_schema do
-    field :code, :string
-  end
-
   @impl Phoenix.LiveView
   def mount(_, _, socket) do
-    changeset = changeset(%__MODULE__{}, %{code: default_code()})
-    {:ok, socket |> assign(output: [], code: default_code()) |> assign_form(changeset)}
+    examples = examples()
+    {name, code} = Enum.random(examples)
+
+    {:ok,
+     socket
+     |> assign(output: [], code: code.(), name: name, examples: Map.keys(examples))}
   end
 
   @impl Phoenix.LiveView
@@ -30,49 +29,28 @@ defmodule TryLuerlWeb.TryLive do
     {:noreply, assign(socket, :code, code)}
   end
 
+  def handle_event("change-example", %{"name" => name}, socket) do
+    code = Map.get_lazy(examples(), name, &Examples.fibonacci/0)
+
+    {:noreply,
+     socket |> assign(code: code, name: name) |> push_event(:set_code, %{code: code.()})}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:print, args}, socket) do
     {:noreply, update(socket, :output, &[inspect(args) | &1])}
   end
 
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
-  end
-
-  defp changeset(data, params) do
-    import Ecto.Changeset
-
-    data
-    |> cast(params, [:code])
-    |> validate_required([:code])
-  end
-
-  defp default_code do
-    ~LUA"""
-    -- Function to generate the Fibonacci sequence
-    function generate_fibonacci(n)
-        local sequence = {}
-        local a, b = 0, 1
-
-        for i = 1, n do
-            table.insert(sequence, a)
-            a, b = b, a + b
-        end
-
-        return sequence
-    end
-
-    -- Example usage
-    local fib_sequence = generate_fibonacci(10)
-
-    for _, value in ipairs(fib_sequence) do
-        print(value)
-    end
-    """
-  end
-
   defp setup_lua do
     Lua.new()
     |> Lua.load_api(TryLuerl.API.Global)
+  end
+
+  defp examples do
+    %{
+      "fibonacci" => &Examples.fibonacci/0,
+      "hello" => &Examples.hello/0,
+      "weather" => &Examples.weather/0
+    }
   end
 end

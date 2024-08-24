@@ -1,6 +1,6 @@
 import { StreamLanguage } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
-
+import { dracula } from "@uiw/codemirror-theme-dracula";
 import { EditorView, basicSetup } from "codemirror";
 
 export const CodeEditor = {
@@ -11,6 +11,7 @@ export const CodeEditor = {
       doc: initialCode,
       extensions: [
         basicSetup,
+        dracula,
         StreamLanguage.define(lua),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
@@ -21,6 +22,8 @@ export const CodeEditor = {
       ],
       parent: this.el,
     });
+
+    view.dom.style.border = "none";
 
     this.handleEvent("set_code", ({ code }) => {
       editor.dispatch({
