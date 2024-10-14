@@ -26,8 +26,9 @@ export const CodeEditor = {
     view.dom.style.border = "none";
 
     this.handleEvent("set_code", ({ code }) => {
-      editor.dispatch({
-        changes: { from: 0, to: editor.state.doc.length, insert: code },
+      console.log("new code", code)
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: code },
       });
     });
   },

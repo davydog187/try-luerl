@@ -33,7 +33,7 @@ defmodule TryLuerlWeb.TryLive do
     code = Map.get_lazy(examples(), name, &Examples.fibonacci/0)
 
     {:noreply,
-     socket |> assign(code: code, name: name) |> push_event(:set_code, %{code: code.()})}
+     socket |> assign(code: code.(), name: name) |> push_event(:set_code, %{code: code.()})}
   end
 
   @impl Phoenix.LiveView
@@ -44,6 +44,7 @@ defmodule TryLuerlWeb.TryLive do
   defp setup_lua do
     Lua.new()
     |> Lua.load_api(TryLuerl.API.Global)
+    |> Lua.load_api(TryLuerl.API.Weather)
   end
 
   defp examples do
