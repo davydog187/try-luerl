@@ -33,7 +33,7 @@ defmodule TryLuerl.Examples do
 
   def weather do
     ~LUA"""
-    print(weather.forecast(50, 50))
+    print(weather.forecast(52.520008, 13.404954))
     """
   end
 end
