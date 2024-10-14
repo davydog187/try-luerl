@@ -19,10 +19,16 @@ defmodule TryLuerlWeb.TryLive do
   def handle_event("execute", _, socket) do
     {output, _} = Lua.eval!(setup_lua(), socket.assigns.code)
 
-    {:noreply, put_flash(socket, :info, "Executed Lua with output #{inspect(output)}")}
+    {:noreply,
+     LiveToast.put_toast(socket, :info, "Executed Lua with output #{inspect(output)}",
+       title: "Success!"
+     )}
   rescue
     error ->
-      {:noreply, put_flash(socket, :error, "Failed to execute Lua #{inspect(error)}")}
+      {:noreply,
+       LiveToast.put_toast(socket, :error, "Failed to execute Lua #{inspect(error)}",
+         title: "Failure"
+       )}
   end
 
   def handle_event("code_updated", %{"code" => code}, socket) do

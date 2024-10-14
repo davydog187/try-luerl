@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/try_luerl_web.ex",
-    "../lib/try_luerl_web/**/*.*ex"
+    "../lib/try_luerl_web/**/*.*ex",
+    "../deps/live_toast/lib/**/*.*ex",
   ],
   theme: {
     extend: {

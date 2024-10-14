@@ -23,13 +23,17 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import { CodeEditor } from "./CodeEditor";
 
+
+// Live Toast
+import { createLiveToastHook } from 'live_toast'
+
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
-  hooks: { CodeEditor },
+  hooks: { CodeEditor, LiveToast: createLiveToastHook() },
 });
 
 // Show progress bar on live navigation and form submits

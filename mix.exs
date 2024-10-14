@@ -57,7 +57,8 @@ defmodule TryLuerl.MixProject do
       {:phoenix_ecto, "~> 4.6"},
       {:ecto, "~> 3.11"},
       {:lua, "~> 0.0.14"},
-      {:req, "~> 0.5.6"}
+      {:req, "~> 0.5.6"},
+      {:live_toast, "~> 0.6.4"}
     ]
   end
 
